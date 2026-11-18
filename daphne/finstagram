@@ -1,0 +1,2083 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{Title} — instagram</title>
+  <link rel="shortcut icon" href="{Favicon}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Paste your CSS styling rules right here! */
+/* =========================================
+   1. MASTER COLOR & FONT VARIABLES
+   ========================================= */
+:root {
+  --bg-color: #ffffff;
+  --border-color: #dbdbdb;
+  --text-main: #262626;
+  --text-muted: #8e8e8e;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  margin: 0;
+  padding: 0;
+}
+/* =========================================
+   2. PAGE LAYOUT
+   ========================================= */
+.ig-container {
+  max-width: 935px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+/* =========================================
+   0.1 STATUS BAR
+   ========================================= */
+.ig-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  padding: 0 10px 15px 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #efefef;
+}
+
+.status-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+/* =========================================
+   2.1 HEADER & BIO
+   ========================================= */
+.ig-header {
+  display: grid;
+  grid-template-columns: 180px 1fr; /* Left column for avatar/username, right for stats */
+  gap: 15px 30px; /* Row gap and column gap */
+  margin-bottom: 30px;
+}
+
+/* Left Column: Stacks Username above the Avatar */
+.ig-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ig-username {
+  font-size: 24px;
+  font-weight: 300;
+  margin: 0;
+}
+
+.ig-avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Right Column: Aligns Stats beside the avatar/username */
+.ig-right-col {
+  display: flex;
+  align-items: center; /* Vertically centers stats with the avatar block */
+}
+
+.ig-stats {
+  display: flex;
+  gap: 40px;
+  font-size: 16px;
+}
+
+/* Bio Row: Spans across the full width, starting right under the avatar */
+.ig-bio-row {
+  grid-column: 1 / -1; 
+  margin-top: 5px;
+}
+
+.ig-bio {
+  font-size: 14px;
+  line-height: 1.5;
+}
+  /* =========================================
+   INSTAGRAM BIO MUSIC PLAYER PILL
+   ========================================= */
+.ig-bio-music-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(128, 128, 128, 0.15); /* Sleek translucent pill background */
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  padding: 5px 12px 5px 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 8px; /* Sits cleanly within your bio text */
+  user-select: none;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.ig-bio-music-pill:hover {
+  background: rgba(128, 128, 128, 0.25);
+  transform: scale(1.02);
+}
+
+.bio-music-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.bio-music-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-main);
+  letter-spacing: -0.1px;
+}
+/* =========================================
+   0.2 MUTUALS / "ALSO FOLLOWED BY" BAR
+   ========================================= */
+.ig-mutuals-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  margin-top: 20px; /* Sits nicely right under your bio */
+  padding-bottom: 10px;
+}
+
+/* Container for the mini picture deck */
+.ig-mutual-avatars {
+  display: flex;
+  align-items: center;
+}
+
+/* Sizing the mini pictures to fit tight spaces */
+.ig-mutual-avatars .mutual-pic {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--bg-color); /* Creates a clean white cutout border between overlapping photos */
+}
+
+/* Overlapping logic: Pulls the 2nd and 3rd pictures backward */
+.ig-mutual-avatars .mutual-pic:not(:first-child) {
+  margin-left: -10px; 
+}
+
+.ig-mutuals-text {
+  font-weight: 400;
+  color: var(--text-main);
+}
+
+.ig-mutuals-text strong {
+  font-weight: 600;
+}
+/* =========================================
+   MUTUALS POPUP MODAL STYLES
+   ========================================= */
+.mutuals-trigger {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-main); /* Default text colour */
+  transition: color 0.2s ease; /* Smoothly transitions the colour change */
+}
+
+.mutuals-trigger:hover {
+  text-decoration: none; /* Explicitly removes any underline */
+  color: var(--text-muted); /* Replaces it with your muted text colour (or any colour you prefer) */
+}
+
+/* Background dark overlay */
+.ig-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* The actual popup box */
+.ig-modal-box {
+  background: var(--bg-color);
+  width: 400px;
+  max-height: 400px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.ig-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+}
+
+.ig-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+.ig-modal-close {
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+}
+
+.ig-modal-body {
+  overflow-y: auto;
+  padding: 8px 16px;
+}
+
+/* Individual user row inside the modal */
+.ig-modal-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.modal-user-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.modal-user-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  font-size: 14px;
+}
+
+.modal-username {
+  font-weight: 600;
+}
+
+.modal-user-fullname {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.modal-follow-btn {
+  background-color: #efefef;
+  border: none;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+/* =========================================
+   0.3 INTERACTION / ACTION BUTTONS (THEME ADAPTIVE)
+   ========================================= */
+.ig-action-buttons {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 20px;
+}
+
+.ig-btn {
+  flex: 1; /* Makes both buttons share the row evenly */
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hover effect */
+.ig-btn:hover {
+  background-color: var(--border-color);
+}
+
+/* Ensure individual modifier classes also use variables instead of hardcoded grey */
+.ig-btn-following,
+.ig-btn-message {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+/* =========================================
+3. THE HIGHLIGHTS
+   ========================================= */
+.ig-highlights {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto; /* Allows horizontal scrolling on smaller screens */
+  padding: 10px 5px 25px 5px;
+  margin-bottom: 10px;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Hides scrollbar in Chrome, Safari, and Edge */
+.ig-highlights::-webkit-scrollbar {
+  display: none;
+}
+
+.ig-highlight-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  flex-shrink: 0; /* Prevents circles from squishing if there are many */
+}
+
+/* Outer grey border + inner white gap */
+.ig-highlight-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  padding: 3px; /* Creates the white space between the image and the grey ring */
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.ig-highlight-item:hover .ig-highlight-ring {
+  transform: scale(1.03);
+}
+
+.ig-highlight-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ig-highlight-title {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-main);
+  max-width: 74px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds "..." if a highlight name is too long */
+  text-align: center;
+}
+/* =========================================
+   STORY & HIGHLIGHT VIEWER (TEMPLATE MATCH)
+   ========================================= */
+.ig-story-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.ig-story-container {
+  position: relative;
+  width: 375px;
+  max-width: 94vw;
+  height: 667px;
+  max-height: 92vh;
+  background: #111;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.ig-story-top-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 115px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.68), transparent);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.ig-story-bottom-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 95px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72), transparent);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Top Progress Bars */
+.ig-story-progress-bars {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #ffffff;
+}
+
+/* Header & Inline Repost Row */
+.ig-story-header {
+  position: absolute;
+  top: 20px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 10;
+}
+
+.ig-story-user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.story-profile-pic {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.story-meta-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.story-title-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.story-username {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.story-time {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* Clickable Repost Attribution Row (Matches Screenshot) */
+.story-repost-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  transition: opacity 0.2s ease;
+}
+
+.story-repost-line:hover {
+  opacity: 0.8;
+}
+
+.story-repost-mini-pic {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Music Cue Line */
+.story-music-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 500;
+  opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+
+.ig-story-close {
+  color: #ffffff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* Image & Tap Navigation */
+.ig-story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.story-tap-zone {
+  position: absolute;
+  top: 95px;
+  bottom: 70px;
+  width: 35%;
+  z-index: 6;
+  cursor: pointer;
+}
+
+.tap-left { left: 0; }
+.tap-right { right: 0; }
+
+/* Bottom Reply Bar + Heart + Paper Plane */
+.ig-story-footer {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+.ig-story-reply-box {
+  flex: 1;
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  border-radius: 22px;
+  padding: 8px 16px;
+  background: transparent;
+}
+
+.ig-story-reply-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.ig-story-reply-box input::placeholder {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ig-story-icon-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.ig-story-icon-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Filled Orange-Red Heart State (Matches Screenshot) */
+.ig-story-like-btn.liked svg {
+  fill: #ff5b2e;
+  stroke: #ff5b2e;
+}
+/* =========================================
+   4. PROFILE GRID TABS & POSTS GRID
+   ========================================= */
+.ig-tabs-bar {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 20px;
+}
+
+.ig-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  height: 52px;
+  cursor: pointer;
+  border-top: 1px solid transparent;
+  margin-top: -1px; /* Overlaps the container border cleanly */
+  transition: color 0.2s ease;
+}
+
+.ig-tab.active {
+  color: var(--text-main);
+  border-top: 1px solid var(--text-main); /* The signature Instagram active top line */
+}
+
+.ig-tab-icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* 3-Column Grid Layout */
+.ig-post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px; /* Clean spacing between images on desktop */
+}
+
+.ig-grid-item {
+  aspect-ratio: 1 / 1; /* Forces square images like real Instagram */
+  overflow: hidden;
+  background-color: #efefef;
+  position: relative;
+  cursor: pointer;
+}
+
+.ig-grid-item img {
+  width: 100%;
+  height: 100%;
+  object-type: cover;
+  transition: transform 0.2s ease;
+}
+
+.ig-grid-item:hover img {
+  transform: scale(1.02);
+}
+
+/* Responsive view for mobile screens */
+@media (max-width: 735px) {
+  .ig-post-grid {
+    gap: 3px; /* Tighter gap on mobile views */
+  }
+}
+/* =========================================
+   THE POSTS
+   =========================================*/
+/* Multi-photo / carousel icon */
+.ig-grid-item {
+  position: relative; /* Essential so absolute positioning stays inside the card */
+}
+
+.ig-multiple-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Ensures clicks pass right through to the card */
+  z-index: 2;
+}
+
+.ig-multiple-icon svg {
+  width: 14px;
+  height: 14px;
+  fill: #ffffff;
+}
+/* =========================================
+   POST DETAIL MODAL STYLES
+   ========================================= */
+.ig-post-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2500;
+  padding: 20px;
+}
+
+.ig-post-modal-container {
+  display: flex;
+  width: 950px;
+  max-width: 100%;
+  height: 600px;
+  max-height: 90vh;
+  background: var(--bg-color);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+/* Left Media Carousel Pane */
+.ig-modal-media-pane {
+  flex: 1.3;
+  background: #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ig-modal-media-pane img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 5;
+  transition: background 0.2s;
+}
+
+.carousel-nav-btn:hover { background: #fff; }
+.prev-btn { left: 12px; }
+.next-btn { right: 12px; }
+
+.modal-dots {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  z-index: 5;
+}
+
+.modal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.modal-dot.active { background: #fff; }
+
+/* Right Sidebar Pane */
+.ig-modal-sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-color);
+  border-left: 1px solid var(--border-color);
+  max-width: 400px;
+}
+
+.ig-modal-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-author-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.modal-author-name {
+  font-weight: 600;
+  font-size: 14px;
+  flex-grow: 1;
+}
+
+.ig-modal-x {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+/* Scrollable Body (Caption + Comments) */
+.ig-modal-scroll-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.ig-modal-caption-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.modal-caption-text {
+  flex-grow: 1;
+}
+
+.modal-post-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+.ig-modal-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 16px 0;
+}
+
+/* Comment Hints / Preview Rows */
+.modal-comment-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.comment-user-pic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-content {
+  flex-grow: 1;
+}
+
+.comment-time {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+
+/* Footer / Actions Bar */
+.ig-modal-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-color);
+}
+
+.ig-modal-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.left-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.action-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+
+.action-icon-btn:hover { opacity: 0.7; }
+
+.action-icon-btn.liked svg {
+  fill: #ed4956;
+  stroke: #ed4956;
+}
+
+.modal-likes-count {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.view-all-comments-hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.view-all-comments-hint:hover {
+  color: var(--text-main);
+}
+    /* =========================================
+   POST TAGGED PEOPLE OVERLAY STYLES
+   ========================================= */
+.modal-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Floating button in the bottom-left of the image */
+.tag-toggle-btn {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.tag-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.05);
+}
+
+/* Container overlaying the photo */
+.modal-tags-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Allows clicks to pass through unless clicking a tag */
+  display: none; /* Hidden by default until toggled */
+  z-index: 8;
+}
+
+.modal-tags-overlay.active {
+  display: block;
+}
+
+/* Individual floating username pill */
+.image-tag-pill {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translate(-50%, -100%); /* Centers the tag directly above the coordinate */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  animation: fadeInTag 0.2s ease;
+}
+
+/* Little downward arrow tip on the tag pill */
+.image-tag-pill::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+@keyframes fadeInTag {
+  from { opacity: 0; transform: translate(-50%, -90%) scale(0.9); }
+  to { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+}
+/* =========================================
+   5. THE TAGGED GRID
+   ========================================= */
+/* =========================================
+   LIGHT & DARK MODE VARIABLES
+   ========================================= */
+:root {
+  --bg-color: #ffffff;
+  --border-color: #dbdbdb;
+  --text-main: #262626;
+  --text-muted: #8e8e8e;
+  --card-bg: #fafafa;
+}
+
+[data-theme="dark"] {
+  --bg-color: #000000;
+  --border-color: #262626;
+  --text-main: #f5f5f5;
+  --text-muted: #a8a8a8;
+  --card-bg: #121212;
+}
+
+/* Settings Gear Trigger Button */
+.ig-settings-trigger-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-main);
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.ig-settings-trigger-btn:hover {
+  transform: rotate(45deg);
+}
+
+/* Blurred Screen Overlay */
+.ig-theme-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px); /* Creates the frosted glass blur effect */
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.ig-theme-popup {
+  width: 320px;
+  background: var(--bg-color);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: popUpScale 0.2s ease;
+}
+
+@keyframes popUpScale {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.ig-theme-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ig-theme-popup-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ig-theme-close {
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.ig-theme-options-list {
+  padding: 8px 0;
+}
+
+.ig-theme-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s ease;
+}
+
+.ig-theme-option:hover {
+  background: rgba(128, 128, 128, 0.1);
+}
+  </style>
+</head>
+<body>
+  <!-- Paste your HTML structure elements right here! -->
+
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  
+<!-- 1. Page container! -->
+  <div class="ig-container">
+<!-- 0.1 Status bar (battery percentage, time, notifications...)! -->
+    <div class="ig-status-bar">
+      <span class="status time">09:41</span>
+      <div class="status icons">
+        <!-- signal icon!-->
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="currentColor" d="M12.896 3.619a.75.75 0 0 1-1.277.787l-.015-.018a.6.6 0 0 0-.154-.116c-.147-.082-.468-.2-1.065-.091c-.408.075-.62.334-.75.667A2.1 2.1 0 0 0 9.5 5.5v1.25a1 1 0 0 0 1 1h.25a1 1 0 0 0 .968-.75h-.468a.75.75 0 1 1 0-1.5h1.25a.75.75 0 0 1 .75.75v.5a2.5 2.5 0 0 1-2.5 2.5h-.25A2.5 2.5 0 0 1 8 6.75V5.459l.004-.08q.005-.1.026-.263c.029-.212.087-.504.209-.814c.245-.627.783-1.396 1.875-1.597c.913-.167 1.592-.008 2.068.258c.23.129.399.275.513.397a2 2 0 0 1 .19.242l.006.01l.003.004zm-8.168-.558c.596-.724 1.772-.302 1.772.636V6.5h.25a.75.75 0 0 1 0 1.5H6.5v.5a.75.75 0 1 1-1.5 0V8H3.203c-1.014 0-1.57-1.18-.926-1.963zM5 6.5V5.09L3.839 6.5zM20 6a1 1 0 0 1 1 1v13a1 1 0 0 1-2 0V7a1 1 0 0 1 1-1m-4 3c.552 0 1 .446 1 .995v10.01c0 .55-.448.995-1 .995c-.553 0-1-.446-1-.995V9.995c0-.55.447-.995 1-.995m-4 3a1 1 0 0 1 1 1v7a1 1 0 1 1-2 0v-7a1 1 0 0 1 1-1m-4 3c.552 0 1 .445 1 .994v4.012A.997.997 0 0 1 8 21c-.553 0-1-.445-1-.994v-4.012A.997.997 0 0 1 8 15m-4 3c.552 0 1 .44 1 .984v1.032A.99.99 0 0 1 4 21c-.553 0-1-.44-1-.984v-1.032A.99.99 0 0 1 4 18" />
+</svg>
+        <!-- battery icon! -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+		<rect width="18" height="12" x="2" y="6" rx="2" />
+		<path d="M20 10h1.5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5H20zM7 10v4m4-4v4" />
+	</g>
+</svg>
+      </div>
+    </div>
+<!-- 2. Profile header section -->
+    <header class="ig-header">
+      
+      <!-- Left Column: Username on top, Avatar underneath -->
+      <div class="ig-left-col">
+        <h1 class="ig-username">{Name}</h1>
+        <div class="ig-avatar-container">
+          <img src="https://64.media.tumblr.com/84218a09888e2363309bdb36c23b7bd0/bf0443a04fefe6d2-bb/s1280x1920/91f5d3b49263eae54a7359c1b191c9292941deb5.jpg" alt="{Name}" class="ig-avatar">
+        </div>
+      </div>
+
+      <!-- Right Column: Stats next to the avatar/username area -->
+      <div class="ig-right-col">
+        <div class="ig-stats">
+          <span><strong>124</strong><br> posts</span>
+          <span><strong>1.4k</strong><br> followers</span>
+          <span><strong>312</strong><br> following</span>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Bio starts cleanly underneath the avatar & stats -->
+      <div class="ig-bio-row">
+        <div class="ig-bio">
+          <strong>{Title}</strong><br>
+          {Description}<br>
+          <!-- Instagram Bio Music Player Pill -->
+    <div class="ig-bio-music-pill" onclick="toggleBioMusic()" id="bioMusicPill">
+      <button class="bio-music-btn" id="bioMusicIconBtn" aria-label="Play or pause music">
+        <!-- Play Icon (Swaps to Pause when playing) -->
+        <svg id="bioMusicSvg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+      </button>
+      <span class="bio-music-label">Vento, Sol, Coração Natiruts</span>
+      
+      <!-- Hidden HTML5 Audio Element -->
+      <audio id="bioAudioPlayer" preload="none">
+        <!-- Replace this URL with your desired MP3 track link -->
+        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+        </div>
+      </div>
+
+    </header>
+    
+<!-- 0.2 Navigation bar / "Also followed by" -->
+    <div class="ig-mutuals-bar">
+      <!-- The Stacked/Overlapping Profile Pics -->
+      <div class="ig-mutual-avatars">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop" alt="User 1" class="mutual-pic">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop" alt="User 2" class="mutual-pic">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop" alt="User 3" class="mutual-pic">
+      </div>
+      <!-- The Text description -->
+      <span class="ig-mutuals-text"> 
+        <span class="mutuals-trigger" onclick="openMutualsModal()">Followed by <strong>username1</strong>, <strong>username2</strong> and <strong>12 others</strong></span>
+      </span>
+    </div>
+    <!-- THE LIST OF MUTUALS! -->
+    <!-- The Popup Modal (Hidden by default) -->
+    <div id="mutualsModal" class="ig-modal-overlay" style="display: none;">
+      <div class="ig-modal-box">
+        <div class="ig-modal-header">
+          <h3>Followers</h3>
+          <span class="ig-modal-close" onclick="closeMutualsModal()">&times;</span>
+        </div>
+        <div class="ig-modal-body">
+          <!-- Repeat this block for each mutual user in the list -->
+          <div class="ig-modal-user">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop" alt="User" class="modal-user-pic">
+            <div class="modal-user-info">
+              <span class="modal-username">username1</span>
+              <span class="modal-user-fullname">Full Name Here</span>
+            </div>
+            <button class="modal-follow-btn">Following</button>
+          </div>
+          <div class="ig-modal-user">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop" alt="User" class="modal-user-pic">
+            <div class="modal-user-info">
+              <span class="modal-username">username2</span>
+              <span class="modal-user-fullname">Another Name</span>
+            </div>
+            <button class="modal-follow-btn">Following</button>
+          </div>
+          <!-- Add more users as needed -->
+        </div>
+      </div>
+    </div>
+ <!-- 0.3 Interaction / Action Buttons (Following & Message) -->
+        <div class="ig-action-buttons">
+          <button class="ig-btn ig-btn-following">Following</button>
+          <button class="ig-btn ig-btn-message">Message</button>
+        </div>
+<!-- 3. Highlights section -->
+    <section class="ig-highlights">
+      
+      <!-- Highlight 1 (Now clickable) -->
+      <div class="ig-highlight-item" onclick="openHighlightModal()">
+        <div class="ig-highlight-ring">
+          <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=150&h=150&fit=crop" alt="Highlight 1">
+        </div>
+        <span class="ig-highlight-title">travel</span>
+      </div>
+
+      <!-- Highlight 2 -->
+      <div class="ig-highlight-item" onclick="openHighlightModal()">
+        <div class="ig-highlight-ring">
+          <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=150&h=150&fit=crop" alt="Highlight 2">
+        </div>
+        <span class="ig-highlight-title">music</span>
+      </div>
+
+      <!-- Highlight 3 -->
+      <div class="ig-highlight-item" onclick="openHighlightModal()">
+        <div class="ig-highlight-ring">
+          <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=150&h=150&fit=crop" alt="Highlight 3">
+        </div>
+        <span class="ig-highlight-title">coffee</span>
+      </div>
+
+    </section>
+
+    <!-- Highlights Story Viewer Modal -->
+<div id="highlightModal" class="ig-story-overlay" style="display: none;">
+  <div class="ig-story-container" onmouseenter="pauseStory()" onmouseleave="resumeStory()">
+    
+    <!-- Top Vignette Gradient -->
+    <div class="ig-story-top-gradient"></div>
+
+    <!-- 1. Dynamic Progress Bars -->
+    <div id="storyProgressBars" class="ig-story-progress-bars"></div>
+
+    <!-- 2. Header matching the screenshot layout -->
+    <div class="ig-story-header">
+      <div class="ig-story-user-row">
+        <img src="{PortraitURL-128}" alt="{Name}" class="story-profile-pic">
+        
+        <div class="story-meta-stack">
+          <!-- Line 1: Author Username + Timestamp -->
+          <div class="story-title-line">
+            <span class="story-username">{Name}</span>
+            <span class="story-time" id="storyTimeLabel">2h</span>
+          </div>
+
+          <!-- Line 2: Repost Icon + Mini Avatar + Original Creator Username -->
+          <a id="storyRepostTag" href="#" target="_blank" class="story-repost-line" style="display: none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="17 1 21 5 17 9"></polyline>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+              <polyline points="7 23 3 19 7 15"></polyline>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+            </svg>
+            <img id="storyRepostAvatar" src="" alt="" class="story-repost-mini-pic">
+            <span id="storyRepostUser">vy_wxyz</span>
+          </a>
+
+          <!-- Line 3: Optional Music Cue -->
+          <div class="story-music-line" id="storyMusicBox" style="display: none;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+            </svg>
+            <span id="storyMusicText">Artist — Song Title</span>
+          </div>
+        </div>
+      </div>
+      
+      <span class="ig-story-close" onclick="closeHighlightModal()">&times;</span>
+    </div>
+
+    <!-- 3. Full-Bleed Slide Image -->
+    <img id="activeStoryImage" src="" alt="Story content" class="ig-story-image">
+
+    <!-- Tap Zones for Prev / Next Slide -->
+    <div class="story-tap-zone tap-left" onclick="prevSlide()"></div>
+    <div class="story-tap-zone tap-right" onclick="nextSlide()"></div>
+
+    <!-- Bottom Vignette Gradient -->
+    <div class="ig-story-bottom-gradient"></div>
+
+    <!-- 4. Bottom Reply Pill + Heart Toggle + Paper Plane -->
+    <div class="ig-story-footer">
+      <div class="ig-story-reply-box">
+        <input type="text" id="storyReplyInput" placeholder="Send message" onfocus="pauseStory()" onblur="resumeStory()">
+      </div>
+
+      <!-- Like Heart Icon -->
+      <button class="ig-story-icon-btn ig-story-like-btn" id="storyLikeBtn" onclick="toggleStoryLike()" aria-label="Like story">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+
+      <!-- Paper Plane Send Icon -->
+      <button class="ig-story-icon-btn" onclick="sendStoryMessage()" aria-label="Send message">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- 4. Profile Grid Tabs (Posts / Tagged) -->
+    <div class="ig-tabs-bar">
+      <div class="ig-tab active" onclick="switchTab('postsGrid', event)">
+        <!-- Posts / Grid Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+	<path d="M0 0h16v16H0z" fill="none" />
+	<path fill="currentColor" d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z" />
+</svg>
+
+        <span>POSTS</span>
+      </div>
+      <div class="ig-tab" onclick="switchTab('taggedGrid', event)">
+        <!-- Tagged / Person Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<path fill="currentColor" d="M12 10c1.151 0 2-.848 2-2s-.849-2-2-2c-1.15 0-2 .848-2 2s.85 2 2 2m0 1c-2.209 0-4 1.612-4 3.6v.386h8V14.6c0-1.988-1.791-3.6-4-3.6" />
+	<path fill="currentColor" d="M19 2H5c-1.103 0-2 .897-2 2v13c0 1.103.897 2 2 2h4l3 3l3-3h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2m-5 15l-2 2l-2-2H5V4h14l.002 13z" />
+</svg>
+
+        <span>TAGGED</span>
+      </div>
+    </div>
+
+    <!-- Posts Grid (Static/Curated for your custom page) -->
+    <div id="postsGrid" class="ig-post-grid">
+      
+      <!-- Post 1 (With Multi-Photo Stack Icon) -->
+      <div class="ig-grid-item" onclick="openPostModal('post1')">
+        <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&h=400&fit=crop" alt="Aesthetic 1">
+        <div class="ig-multiple-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	<path d="M0 0h24v24H0z" fill="none" />
+	<g fill="currentColor">
+		<path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6z" />
+		<path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3z" />
+	</g>
+</svg>
+        </div>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="ig-grid-item" onclick="openPostModal('post2')">
+        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=400&fit=crop" alt="Aesthetic 2">
+      </div>
+
+    </div>
+
+    <!-- =========================================
+       POST DETAIL MODAL (LIGHTBOX)
+       ========================================= -->
+    <div id="postModal" class="ig-post-modal-overlay" style="display: none;">
+      <div class="ig-post-modal-container">
+        
+        <!-- Left Side: Image Carousel Area -->
+        <div class="ig-modal-media-pane">
+          <button class="carousel-nav-btn prev-btn" onclick="prevModalSlide()">&#10094;</button>
+          <img id="modalActiveImage" src="" alt="Post media">
+          <button class="carousel-nav-btn next-btn" onclick="nextModalSlide()">&#10095;</button>
+          <div class="modal-dots" id="modalDotsContainer"></div>
+          <!-- Instagram-style Tag People Toggle Button (Bottom-Left Corner) -->
+          <button class="tag-toggle-btn" onclick="toggleImageTags()" aria-label="Show tagged people">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+          </button>
+        </div>
+        </div>
+
+        <!-- Right Side: Details, Caption, & Comments Pane -->
+        <div class="ig-modal-sidebar">
+          
+          <!-- Modal Header (Author info) -->
+          <div class="ig-modal-header">
+            <img src="{PortraitURL-128}" alt="{Name}" class="modal-author-pic">
+            <span class="modal-author-name">{Name}</span>
+            <button class="ig-modal-x" onclick="closePostModal()">&times;</button>
+          </div>
+
+          <!-- Scrollable Content Section (Caption & Comments) -->
+          <div class="ig-modal-scroll-body">
+            
+            <!-- Original Post Caption -->
+            <div class="ig-modal-caption-row">
+              <img src="{PortraitURL-128}" alt="{Name}" class="modal-author-pic">
+              <div class="modal-caption-text">
+                <strong>{Name}</strong> <span id="modalCaptionContent">Static post caption goes here... ✨</span>
+                <div class="modal-post-time" id="modalPostTime">2 DAYS AGO</div>
+              </div>
+            </div>
+
+            <div class="ig-modal-divider"></div>
+
+            <!-- Comment Hints / Preview Section -->
+            <div class="ig-modal-comments-list" id="modalCommentsList">
+              <!-- Populated dynamically via JS -->
+            </div>
+
+          </div>
+
+          <!-- Bottom Action Toolbar & Comment Trigger -->
+          <div class="ig-modal-footer">
+            <div class="ig-modal-actions-bar">
+              <div class="left-actions">
+                <button class="action-icon-btn" onclick="toggleModalLike()">
+                  <svg id="modalLikeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <button class="action-icon-btn" onclick="openFullCommentsModal()">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </button>
+              </div>
+              <span class="modal-likes-count" id="modalLikesCount">1,248 likes</span>
+            </div>
+            
+            <!-- Clickable hint to open full comment section -->
+            <div class="view-all-comments-hint" onclick="openFullCommentsModal()">
+              View all 42 comments...
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Tagged Posts Grid (Hidden by default, static placeholders) -->
+    <div id="taggedGrid" class="ig-post-grid" style="display: none;">
+      <div class="ig-grid-item">
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop" alt="Tagged Aesthetic 1">
+      </div>
+    </div>
+<!-- Add this gear button into your header info stack (next to your username/stats) -->
+    <button class="ig-settings-trigger-btn" onclick="openThemeModal()" aria-label="Theme settings">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+
+    <!-- Theme Switcher Modal Overlay with Backdrop Blur -->
+    <div id="themeModal" class="ig-theme-overlay" style="display: none;">
+      <div class="ig-theme-popup">
+        <div class="ig-theme-popup-header">
+          <h3>Appearance</h3>
+          <span class="ig-theme-close" onclick="closeThemeModal()">&times;</span>
+        </div>
+<!-- Theme Switcher Welcome Overlay (Shows on First Load) -->
+    <div id="themeModal" class="ig-theme-overlay" style="display: flex;">
+      <div class="ig-theme-popup">
+        <div class="ig-theme-popup-header">
+          <h3>Choose Theme</h3>
+          <!-- Optional close 'x' if they want to dismiss it -->
+          <span class="ig-theme-close" onclick="closeThemeModal()">&times;</span>
+        </div>
+        
+        <div class="ig-theme-options-list">
+          <div class="ig-theme-option" onclick="setTheme('light')">
+            <span>☀️ Light Mode</span>
+            <input type="radio" name="themeChoice" id="lightRadio">
+          </div>
+          <div class="ig-theme-option" onclick="setTheme('dark')">
+            <span>🌙 Dark Mode</span>
+            <input type="radio" name="themeChoice" id="darkRadio">
+          </div>
+        </div>
+      </div>
+    </div>
+  <script>
+  function openMutualsModal() {
+    document.getElementById('mutualsModal').style.display = 'flex';
+  }
+
+  function closeMutualsModal() {
+    document.getElementById('mutualsModal').style.display = 'none';
+  }
+
+  // Optional: Close modal if user clicks outside the white box
+  window.onclick = function(event) {
+    let modal = document.getElementById('mutualsModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>
+  <script>
+  const highlightsData = {
+    travel: [
+      {
+        image: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=600&h=900&fit=crop",
+        time: "2h",
+        repostUser: "vy_wxyz",
+        repostAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop",
+        repostUrl: "https://tumblr.com",
+        music: null,
+        liked: true // Starts with the orange heart active like the screenshot
+      },
+      {
+        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=900&fit=crop",
+        time: "14w",
+        repostUser: null,
+        repostAvatar: null,
+        repostUrl: null,
+        music: "Ozzy Osbourne · No More Tears",
+        liked: false
+      }
+    ],
+    music: [
+      {
+        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&h=900&fit=crop",
+        time: "6w",
+        repostUser: "vinyl.club",
+        repostAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop",
+        repostUrl: "https://tumblr.com",
+        music: "Deftones · Sextape",
+        liked: false
+      }
+    ],
+    coffee: [
+      {
+        image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=900&fit=crop",
+        time: "3d",
+        repostUser: null,
+        repostAvatar: null,
+        repostUrl: null,
+        music: "Laufey · From The Start",
+        liked: false
+      }
+    ]
+  };
+
+  let activeSlides = [];
+  let currentSlide = 0;
+  let slideTimer = null;
+  const SLIDE_DURATION = 4500;
+  let slideStartTime = 0;
+  let remainingTime = SLIDE_DURATION;
+  let isPaused = false;
+
+  function openHighlightModal(highlightKey = 'travel') {
+    activeSlides = highlightsData[highlightKey] || highlightsData.travel;
+    currentSlide = 0;
+    isPaused = false;
+
+    const barsContainer = document.getElementById('storyProgressBars');
+    barsContainer.innerHTML = '';
+    activeSlides.forEach((_, idx) => {
+      const bar = document.createElement('div');
+      bar.className = 'progress-bar';
+      bar.innerHTML = `<div class="progress-fill" id="fill-${idx}"></div>`;
+      barsContainer.appendChild(bar);
+    });
+
+    document.getElementById('highlightModal').style.display = 'flex';
+    renderSlide(SLIDE_DURATION);
+  }
+
+  function closeHighlightModal() {
+    document.getElementById('highlightModal').style.display = 'none';
+    clearTimeout(slideTimer);
+  }
+
+  function renderSlide(duration) {
+    clearTimeout(slideTimer);
+
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= activeSlides.length) {
+      closeHighlightModal();
+      return;
+    }
+
+    const slide = activeSlides[currentSlide];
+    remainingTime = duration;
+    slideStartTime = Date.now();
+
+    // Image & Timestamp
+    document.getElementById('activeStoryImage').src = slide.image;
+    document.getElementById('storyTimeLabel').textContent = slide.time;
+
+    // Repost Line (Arrows + Mini Avatar + Username)
+    const repostTag = document.getElementById('storyRepostTag');
+    if (slide.repostUser) {
+      document.getElementById('storyRepostUser').textContent = slide.repostUser;
+      document.getElementById('storyRepostAvatar').src = slide.repostAvatar || '';
+      repostTag.href = slide.repostUrl || '#';
+      repostTag.style.display = 'inline-flex';
+    } else {
+      repostTag.style.display = 'none';
+    }
+
+    // Music Cue
+    const musicBox = document.getElementById('storyMusicBox');
+    if (slide.music) {
+      document.getElementById('storyMusicText').textContent = slide.music;
+      musicBox.style.display = 'flex';
+    } else {
+      musicBox.style.display = 'none';
+    }
+
+    // Heart Button State
+    const likeBtn = document.getElementById('storyLikeBtn');
+    if (slide.liked) {
+      likeBtn.classList.add('liked');
+    } else {
+      likeBtn.classList.remove('liked');
+    }
+
+    // Progress Bars
+    activeSlides.forEach((_, i) => {
+      const fill = document.getElementById(`fill-${i}`);
+      if (!fill) return;
+      fill.style.transition = 'none';
+
+      if (i < currentSlide) {
+        fill.style.width = '100%';
+      } else if (i === currentSlide) {
+        if (duration === SLIDE_DURATION) fill.style.width = '0%';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            fill.style.transition = `width ${duration}ms linear`;
+            fill.style.width = '100%';
+          });
+        });
+      } else {
+        fill.style.width = '0%';
+      }
+    });
+
+    if (!isPaused) {
+      slideTimer = setTimeout(() => {
+        currentSlide++;
+        renderSlide(SLIDE_DURATION);
+      }, duration);
+    }
+  }
+
+  function toggleStoryLike() {
+    const slide = activeSlides[currentSlide];
+    if (!slide) return;
+    slide.liked = !slide.liked;
+    document.getElementById('storyLikeBtn').classList.toggle('liked', slide.liked);
+  }
+
+  function pauseStory() {
+    if (isPaused || document.getElementById('highlightModal').style.display === 'none') return;
+    isPaused = true;
+    clearTimeout(slideTimer);
+
+    const elapsed = Date.now() - slideStartTime;
+    remainingTime = Math.max(0, remainingTime - elapsed);
+
+    const fill = document.getElementById(`fill-${currentSlide}`);
+    if (fill) {
+      const computedWidth = window.getComputedStyle(fill).width;
+      fill.style.transition = 'none';
+      fill.style.width = computedWidth;
+    }
+  }
+
+  function resumeStory() {
+    if (!isPaused || document.getElementById('highlightModal').style.display === 'none') return;
+    if (document.activeElement === document.getElementById('storyReplyInput')) return;
+
+    isPaused = false;
+    renderSlide(remainingTime);
+  }
+
+  function nextSlide() {
+    isPaused = false;
+    currentSlide++;
+    renderSlide(SLIDE_DURATION);
+  }
+
+  function prevSlide() {
+    isPaused = false;
+    currentSlide = Math.max(0, currentSlide - 1);
+    renderSlide(SLIDE_DURATION);
+  }
+
+  function sendStoryMessage() {
+    const input = document.getElementById('storyReplyInput');
+    if (!input.value.trim()) return;
+    input.value = '';
+    input.placeholder = 'Sent!';
+    setTimeout(() => {
+      input.placeholder = 'Send message';
+      resumeStory();
+    }, 1200);
+  }
+
+  window.addEventListener('click', function(event) {
+    const storyModal = document.getElementById('highlightModal');
+    if (event.target === storyModal) {
+      closeHighlightModal();
+    }
+  });
+</script>
+  <script>
+  // Mock Database for Curated Posts with Tagged People Coordinates
+  const postsDatabase = {
+    post1: {
+      images: [
+        "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=800&fit=crop"
+      ],
+      // Tagged people coordinates per slide (x and y percentages from top-left)
+      imageTags: [
+        [ { name: "vy_wxyz", x: 45, y: 55 }, { name: "stargazer.archive", x: 70, y: 40 } ], // Slide 0 tags
+        [ { name: "vinyl.club", x: 30, y: 60 } ], // Slide 1 tags
+        [] // Slide 2 tags (empty)
+      ],
+      caption: "Lost in the winter archive. Three days of quiet snow and coffee cups. ☕️❄️",
+      time: "2 DAYS AGO",
+      likes: "1,248 likes",
+      liked: false,
+      comments: [
+        { user: "vy_wxyz", pic: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop", text: "omg the second slide is everything", time: "1d" },
+        { user: "stargazer.archive", pic: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop", text: "take me back there immediately", time: "1d" }
+      ]
+    },
+    post2: {
+      images: [
+        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&h=800&fit=crop"
+      ],
+      imageTags: [
+        [ { name: "velvet.nights", x: 50, y: 45 } ]
+      ],
+      caption: "Late night records and ambient soundscapes. 🎧✨",
+      time: "5 DAYS AGO",
+      likes: "892 likes",
+      liked: true,
+      comments: [
+        { user: "vinyl.club", pic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop", text: "what track is playing??", time: "3d" }
+      ]
+    }
+  };
+
+  let activePostId = null;
+  let activeModalSlide = 0;
+  let areTagsVisible = false;
+
+  function openPostModal(postId) {
+    activePostId = postId;
+    activeModalSlide = 0;
+    areTagsVisible = false;
+    const post = postsDatabase[postId];
+    if (!post) return;
+
+    // Populate caption & metadata
+    document.getElementById('modalCaptionContent').textContent = post.caption;
+    document.getElementById('modalPostTime').textContent = post.time;
+    document.getElementById('modalLikesCount').textContent = post.likes;
+
+    // Like button state
+    const likeBtn = document.querySelector('.action-icon-btn');
+    if (post.liked) likeBtn.classList.add('liked');
+    else likeBtn.classList.remove('liked');
+
+    // Populate comment hints
+    const commentsList = document.getElementById('modalCommentsList');
+    commentsList.innerHTML = '';
+    post.comments.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'modal-comment-row';
+      row.innerHTML = `
+        <img src="${c.pic}" alt="${c.user}" class="comment-user-pic">
+        <div class="comment-content">
+          <strong>${c.user}</strong> <span>${c.text}</span>
+          <span class="comment-time">${c.time}</span>
+        </div>
+      `;
+      commentsList.appendChild(row);
+    });
+
+    renderModalSlide();
+    document.getElementById('postModal').style.display = 'flex';
+  }
+
+  function closePostModal() {
+    document.getElementById('postModal').style.display = 'none';
+  }
+
+  function renderModalSlide() {
+    const post = postsDatabase[activePostId];
+    if (!post) return;
+
+    document.getElementById('modalActiveImage').src = post.images[activeModalSlide];
+
+    // Reset tag overlay state when changing slides
+    areTagsVisible = false;
+    const tagsContainer = document.getElementById('modalTagsContainer');
+    if (tagsContainer) tagsContainer.classList.remove('active');
+    
+    const tagToggleBtn = document.querySelector('.tag-toggle-btn');
+    if (tagToggleBtn) {
+      tagToggleBtn.style.background = 'rgba(0, 0, 0, 0.7)';
+      tagToggleBtn.style.color = '#fff';
+    }
+
+    // Populate tags for current slide
+    if (tagsContainer && tagToggleBtn) {
+      tagsContainer.innerHTML = '';
+      const currentSlideTags = post.imageTags && post.imageTags[activeModalSlide] ? post.imageTags[activeModalSlide] : [];
+
+      if (currentSlideTags.length > 0) {
+        tagToggleBtn.style.display = 'flex';
+        currentSlideTags.forEach(tag => {
+          const pill = document.createElement('div');
+          pill.className = 'image-tag-pill';
+          pill.textContent = tag.name;
+          pill.style.left = `${tag.x}%`;
+          pill.style.top = `${tag.y}%`;
+          pill.onclick = (e) => {
+            e.stopPropagation();
+            alert(`Visiting profile: @${tag.name}`);
+          };
+          tagsContainer.appendChild(pill);
+        });
+      } else {
+        tagToggleBtn.style.display = 'none';
+      }
+    }
+
+    // Show/hide carousel arrows based on image count
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    if (post.images.length > 1) {
+      prevBtn.style.display = activeModalSlide > 0 ? 'flex' : 'none';
+      nextBtn.style.display = activeModalSlide < post.images.length - 1 ? 'flex' : 'none';
+    } else {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
+
+    // Render dots
+    const dotsContainer = document.getElementById('modalDotsContainer');
+    dotsContainer.innerHTML = '';
+    if (post.images.length > 1) {
+      post.images.forEach((_, idx) => {
+        const dot = document.createElement('div');
+        dot.className = `modal-dot ${idx === activeModalSlide ? 'active' : ''}`;
+        dotsContainer.appendChild(dot);
+      });
+    }
+  }
+
+  function toggleImageTags() {
+    areTagsVisible = !areTagsVisible;
+    const overlay = document.getElementById('modalTagsContainer');
+    if (overlay) overlay.classList.toggle('active', areTagsVisible);
+    
+    const btn = document.querySelector('.tag-toggle-btn');
+    if (btn) {
+      btn.style.background = areTagsVisible ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)';
+      btn.style.color = areTagsVisible ? '#000' : '#fff';
+    }
+  }
+
+  function nextModalSlide() {
+    const post = postsDatabase[activePostId];
+    if (activeModalSlide < post.images.length - 1) {
+      activeModalSlide++;
+      renderModalSlide();
+    }
+  }
+
+  function prevModalSlide() {
+    if (activeModalSlide > 0) {
+      activeModalSlide--;
+      renderModalSlide();
+    }
+  }
+
+  function toggleModalLike() {
+    const post = postsDatabase[activePostId];
+    if (!post) return;
+    post.liked = !post.liked;
+    const likeBtn = document.querySelector('.action-icon-btn');
+    likeBtn.classList.toggle('liked', post.liked);
+  }
+
+  function openFullCommentsModal() {
+    alert("Opening full comments drawer / popup view!");
+  }
+
+  // Close modal on outside background click
+  window.addEventListener('click', function(event) {
+    const overlay = document.getElementById('postModal');
+    if (event.target === overlay) {
+      closePostModal();
+    }
+  });
+</script>
+  <script>
+  function toggleBioMusic() {
+    const audio = document.getElementById('bioAudioPlayer');
+    const svg = document.getElementById('bioMusicSvg');
+    const pill = document.getElementById('bioMusicPill');
+
+    if (audio.paused) {
+      audio.play().then(() => {
+        // Switch to Pause icon
+        svg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        pill.classList.add('playing');
+      }).catch(err => {
+        console.log("Audio playback blocked or failed:", err);
+      });
+    } else {
+      audio.pause();
+      // Switch back to Play icon
+      svg.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+      pill.classList.remove('playing');
+    }
+  }
+
+  // Automatically reset icon when the audio track ends
+  document.getElementById('bioAudioPlayer').addEventListener('ended', function() {
+    const svg = document.getElementById('bioMusicSvg');
+    const pill = document.getElementById('bioMusicPill');
+    svg.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+    pill.classList.remove('playing');
+  });
+</script>
+        <script>
+  function openThemeModal() {
+    document.getElementById('themeModal').style.display = 'flex';
+    
+    // Check current active mode for radio button state
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    document.getElementById('lightRadio').checked = (currentTheme === 'light');
+    document.getElementById('darkRadio').checked = (currentTheme === 'dark');
+  }
+
+  function closeThemeModal() {
+    document.getElementById('themeModal').style.display = 'none';
+  }
+
+  function setTheme(mode) {
+    if (mode === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('ig_theme', 'dark');
+      document.getElementById('darkRadio').checked = true;
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('ig_theme', 'light');
+      document.getElementById('lightRadio').checked = true;
+    }
+    // Automatically close popup once a choice is made
+    closeThemeModal();
+  }
+
+  // On page load: Check if user has already chosen a theme before
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('ig_theme');
+    
+    if (savedTheme) {
+      // If they already chose previously, keep modal hidden and apply preference
+      document.getElementById('themeModal').style.display = 'none';
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } else {
+      // If it's their very first time visiting, keep the modal visible (popup banner)
+      document.getElementById('themeModal').style.display = 'flex';
+      document.getElementById('lightRadio').checked = true;
+    }
+  });
+
+  // Close popup when clicking the blurred background outside the card
+  window.addEventListener('click', function(event) {
+    const overlay = document.getElementById('themeModal');
+    if (event.target === overlay) {
+      closeThemeModal();
+    }
+  });
+</script>
+<script>
+function switchTab(gridId, event) {
+    // Hide all grids
+    document.getElementById('postsGrid').style.display = 'none';
+    document.getElementById('taggedGrid').style.display = 'none';
+
+    // Show the selected grid
+    document.getElementById(gridId).style.display = 'grid';
+
+    // Remove active class from all tabs
+    let tabs = document.querySelectorAll('.ig-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // Add active class to the clicked tab
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>
